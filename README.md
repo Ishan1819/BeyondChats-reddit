@@ -39,7 +39,7 @@ This project scrapes a Reddit user's public posts and comments, analyzes their c
 
 ## Installation
 # Clone this repository 
-git clone https://github.com/Ishan1819/BeyondChats.git
+git clone https://github.com/Ishan1819/BeyondChats-reddit.git
 
 # Create a conda environment (optional but recommended)(Needs anaconda prompt downloaded)
 - conda create -n reddit python=3.11
