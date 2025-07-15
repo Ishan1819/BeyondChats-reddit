@@ -1,14 +1,16 @@
 # persona_generator.py
-# code to get the information about how to generate a persona from reddit posts and comments
+# Code to generate a persona from Reddit posts and comments
 
-from datetime import datetime
 import os
+from datetime import datetime
+
 from dotenv import load_dotenv
 import google.generativeai as genai
 
 # ── Load environment variables ────────────────────────────────────────────────
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))  # <-- Make sure this is set
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
 
 # ── Main function ─────────────────────────────────────────────────────────────
 def generate_persona(posts: list[dict], comments: list[dict], username: str) -> str:
@@ -35,8 +37,9 @@ def generate_persona(posts: list[dict], comments: list[dict], username: str) -> 
     # ── 2. Prompt Gemini with structured UX persona format ─────────────────────
     prompt = f"""
 You are an expert in psychological profiling and UX persona creation.
-Below are some of the paramters you should use to generate a detailed user persona based on Reddit posts and comments. Add some more parameters other than included below that could be useful for a UX persona. If didn't get enough information or the user is not active or banned, return a message saying "Not enough information to generate a persona for this user."
-Using the Reddit posts and comments below, generate a detailed structured user persona for **u/{username}** in the format below.
+Below are some of the parameters you should use to generate a detailed user persona based on Reddit posts and comments. Add more parameters if relevant. If there is not enough information or the user is inactive or banned, return: "Not enough information to generate a persona for this user."
+
+Using the Reddit posts and comments below, generate a structured user persona for **u/{username}** in the format below.
 
 ---
 
@@ -56,14 +59,6 @@ List 3–6 traits like: Practical, Adaptive, Curious, Analytical, etc.
 
 ---
 
-Interests & hobbies   
-  - Writing style  
-  - Ideologies and values  
-  - Emotional tone and behavioral insights  
-  - Likely profession or background
-
----
-
 ### Quote
 A one-line quote that reflects their mindset or frustration  
 (e.g., "I want to spend less time ordering food and more time enjoying it.")
@@ -80,7 +75,7 @@ A one-line quote that reflects their mindset or frustration
 
 ---
 
-### Personality (on scale of number out of 5)
+### Personality (Scale 0–5)
 - Openness (4) - (1) Closed
 - Introvert (2) - (3) Extrovert  
 - Intuition (3) - (2) Sensing  
@@ -90,21 +85,21 @@ A one-line quote that reflects their mindset or frustration
 ---
 
 ### Behaviour & Habits
-List 4–6 habits or observed behavioral patterns from their posts/comments. Each bullet should ideally link to a Reddit post.
+List 4–6 behavioral patterns observed from their posts/comments. Cite Reddit URLs.
 
 ---
 
 ### Frustrations
-List 3–5 common pain points or issues they mention.
+List 3–5 common pain points or complaints.
 
 ---
 
 ### Goals & Needs
-List 3–5 things they seem to want or care about.
+List 3–5 key desires or priorities.
 
 ---
 
-Use insights only from the user’s Reddit content below. **Cite Reddit URLs to justify your claims wherever possible**.
+Use only insights from the user’s Reddit content below. **Cite Reddit URLs wherever possible**.
 
 ---
 
@@ -116,15 +111,14 @@ Use insights only from the user’s Reddit content below. **Cite Reddit URLs to 
     response = model.generate_content(prompt)
 
     # ── 4. Attach metadata ─────────────────────────────────────────────────────
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    metadata = f"""---
-Username: u/{username}
-Profile URL: https://www.reddit.com/user/{username}/
-Posts Scraped: {len(posts)}
-Comments Scraped: {len(comments)}
----
-
-"""
+    metadata = (
+        f"---\n"
+        f"Username: u/{username}\n"
+        f"Profile URL: https://www.reddit.com/user/{username}/\n"
+        f"Posts Scraped: {len(posts)}\n"
+        f"Comments Scraped: {len(comments)}\n"
+        f"---\n\n"
+    )
 
     # ── 5. Return structured result ────────────────────────────────────────────
     return metadata + response.text
