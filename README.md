@@ -1,6 +1,6 @@
 # Reddit Persona Generator
 
-This project scrapes a Reddit user's public posts and comments, analyzes their content, and generates a detailed psychological persona using **Google Gemini 1.5-flash**. The public user accounts gets the persona created for them but the ones that are banned, private or deleted from reddit could not be accessed and thus no personas could be created for them.
+This project scrapes a Reddit user's public posts and comments, analyzes their content, and generates a detailed psychological persona using **Google Gemini 1.5-flash**. The public user accounts gets the persona created for them but the ones that are banned, private or deleted from reddit could not be accessed and thus no personas could be created for them. The outputs for the user personas will get save in persona_output in the same folder.
 
 > Example use cases:
  - Behavioral research
